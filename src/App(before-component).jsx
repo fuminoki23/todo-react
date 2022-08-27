@@ -1,9 +1,7 @@
+// コンポーネント化前
+
 import { useState } from "react";
 import "./styles.css";
-
-import { InputTodo } from "./components/inputTodo";
-import { IncompTodo } from "./components/incompTodo";
-import { CompTodo } from "./components/compTodo";
 
 export default function App() {
   const [todoText, setTodoText] = useState("");
@@ -46,21 +44,41 @@ export default function App() {
 
   return (
     <>
-      <InputTodo
-        disabled={incompTodos.length >= 5 && true}
-        todoText={todoText}
-        onChangeTodoText={onChangeTodoText}
-        onClickAdd={onClickAdd}
-      />
-      {incompTodos.length >= 5 && (
-        <p style={{ color: "red" }}>登録できるtodoは５個までです</p>
-      )}
-      <IncompTodo
-        incompTodos={incompTodos}
-        onClickComp={onClickComp}
-        onClickDel={onClickDel}
-      />
-      <CompTodo compTodos={compTodos} onClickBack={onClickBack} />
+      <div className="input-area">
+        <input
+          placeholder="todoを入力"
+          value={todoText}
+          onChange={onChangeTodoText}
+        />
+        <button onClick={onClickAdd}>追加</button>
+      </div>
+      <div className="incomplete">
+        <p className="title">未完了のtodo</p>
+        <ul className="list">
+          {incompTodos.map((todo, index) => {
+            return (
+              <li key={todo}>
+                <p>{todo}</p>
+                <button onClick={() => onClickComp(index)}>完了</button>
+                <button onClick={() => onClickDel(index)}>削除</button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="complete">
+        <p className="title">完了したtodo</p>
+        <ul className="list">
+          {compTodos.map((todo, index) => {
+            return (
+              <li key={todo}>
+                <p>{todo}</p>
+                <button onClick={() => onClickBack(index)}>戻る</button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </>
   );
 }
